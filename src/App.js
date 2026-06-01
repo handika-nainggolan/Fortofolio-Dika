@@ -95,11 +95,14 @@ const ALL_SKILLS = [
 
 const PROJECTS = [
   {
-    num:'01',title:'Smart aquarium monitoring system',
-    desc:'Scalable blog platform on Kubernetes using Deployments, Services, Ingress, ConfigMaps, Secrets, PV, and HPA for high availability.',
-    detail:'Built a fully containerized blog application deployed on a Kubernetes cluster. Implemented Horizontal Pod Autoscaler (HPA) for auto-scaling, Persistent Volumes for data persistence, Ingress controller for routing, ConfigMaps and Secrets for configuration management. The platform supports zero-downtime deployments with rolling update strategy.',
-    tags:['Kubernetes','Docker','Ingress','HPA','ConfigMaps','Nginx'],cls:['tag-purple','tag-blue','tag-green','tag-orange','tag-blue','tag-purple'],
-    gh:'https://github.com/handika-nainggolan/smart-aquarium-monitoring-system',img:foto7
+     num: '01',
+  title: 'Smart Aquarium Monitoring System',
+  desc: 'IoT-based smart aquarium monitoring system with real-time water quality monitoring, automatic feeding, and web-based dashboard.',
+  detail: 'Designed and implemented an IoT-based aquarium monitoring system using Arduino microcontroller integrated with multiple sensors (pH, temperature, turbidity, water level). Features include real-time water quality monitoring, automatic feeding mechanism triggered by schedule or manual control, live data visualization on a web-based dashboard, and alert notifications when water parameters are out of safe range. Data transmitted via MQTT protocol to a monitoring server.',
+  tags: ['Arduino', 'IoT', 'MQTT', 'Sensors', 'Dashboard', 'C++'],
+  cls: ['tag-blue', 'tag-green', 'tag-purple', 'tag-orange', 'tag-blue', 'tag-red'],
+  gh: 'https://github.com/handika-nainggolan/smart-aquarium-monitoring-system',
+  img: foto7,
   },
   {
     num:'02',title:'Distributed E-Commerce System',
@@ -109,14 +112,14 @@ const PROJECTS = [
     gh:'https://github.com/handika-nainggolan/sistem-terdistribusi',img:foto2
   },
   {
-    num:'04',title:'Monitoring Platform',
+    num:'03',title:'Monitoring Platform',
     desc:'Automated Linux monitoring platform with self-healing capabilities, logging system, and real-time dashboards powered by Grafana and Prometheus.',
     detail:'Built a Linux-based monitoring solution using Bash Script, Crontab, Prometheus, and Grafana. Implemented automated service monitoring, self-healing through automatic restarts, activity logging, and real-time infrastructure visualization for CPU, memory, disk, network, and uptime metrics.',
     tags:['Prometheus','Grafana','Docker','Linux','Node Exporter','Alerting'],cls:['tag-orange','tag-blue','tag-purple','tag-green','tag-blue','tag-red'],
     gh:'https://github.com/handika-nainggolan/monitoring-platform-sistem',img:foto4
   },
   {
-    num: '05',
+    num: '04',
   title: 'Personal Portfolio Website',
   desc: 'Personal portfolio website built with React.js and pure CSS. Features dark/light theme, scroll navigation, typewriter animation, PDF certificate viewer, and responsive design.',
   detail: 'Built a fully responsive personal portfolio website from scratch using React.js and pure CSS without any UI framework. Features include dark/light theme toggle, smooth scroll navigation with active section detection, typewriter animation, skill showcase, project gallery with detail modal, PDF certificate viewer, and contact form. Deployed on Vercel.',
@@ -126,7 +129,7 @@ const PROJECTS = [
   img: foto5,  // ganti dengan screenshot web portfolio kamu
   },
   {
-   num: '06',
+   num: '05',
   title: 'DevOps Node.js Kubernetes Pipeline',
   desc: 'Full DevOps pipeline for a Node.js app — containerized with Docker, orchestrated on Kubernetes, and automated with CI/CD GitHub Actions.',
   detail: 'Built a complete end-to-end DevOps pipeline for a Node.js application. Covers containerization with Docker multi-stage builds, Kubernetes deployment using Deployments, Services, ConfigMaps and Secrets, CI/CD automation with GitHub Actions that triggers build, test, and deploy on every git push, and health check probes for production reliability.',
@@ -190,7 +193,7 @@ const AWARDS_LIST = [
 
 // Sertifikat — pakai PDF import dari src/certs/
 const CERTS = [
-  {title:'Introduction to IoT and Digital Transformation',issuer:'Simplilearn',date:'2025',desc:'IoT fundamentals, connected devices, digital transformation, and smart technology concepts.',em:'📡',pdf:cert1},
+  {title:'Introduction to IoT and Digital Transformation',issuer:'Cisco',date:'2025',desc:'IoT fundamentals, connected devices, digital transformation, and smart technology concepts.',em:'📡',pdf:cert1},
   {title:'Network Fundamental',issuer:'Aguna Course',date:'2025',desc:'Networking basics, IP addressing, network protocols, routing, and connectivity concepts.',em:'🌐',pdf:cert4},
   {title:'Huawei ICT Competition 2024–2025 National Final',issuer:'Huawei',date:'2024',desc:'Cloud computing, operating systems, networking, and ICT infrastructure fundamentals.',em:'🏆',pdf:cert5},
   {title:'Introduction to Cloud Computing',issuer:'Simplilearn',date:'2025',desc:'Cloud computing fundamentals, service models, deployment models, and cloud technologies.',em:'☁️',pdf:cert7},
