@@ -1,108 +1,218 @@
-# Handika Pratama Nainggolan — Portfolio V3
+# 🚀 Handika Pratama Nainggolan — Personal Portfolio
 
-Portfolio website modern dengan scroll navigation, dark/light theme, dan semua fitur lengkap.
+> Personal portfolio website built with **React.js** and **Pure CSS** — showcasing my journey as an Aspiring DevOps & IoT Engineer.
 
-## ✨ Fitur
-- 🌙☀️ **Dark / Light Theme** — tombol toggle di navbar kanan atas
-- 📜 **Scroll Navigation** — navbar highlight otomatis saat scroll, TIDAK perlu klik per halaman
-- ⌨️ **Typewriter Animation** — role berganti-ganti otomatis di hero
-- 🎨 **Skill Icons SVG** — logo realistis untuk semua teknologi
-- 📊 **Skill Tabs** — DevOps, Programming, IoT, Tools (bug fixed!)
-- 🖼️ **Project Image Support** — tinggal taruh foto project
-- 🏆 **Halaman Baru**: Experience, Education, Certificates
-- 📱 **Responsive** — mobile/tablet/desktop
-- ✨ **Scroll Reveal** — animasi saat scroll ke bawah
-- 🚀 **Siap deploy ke Vercel**
+---
 
-## 🗂️ Struktur Folder
+## 🌐 Live Demo
+
+**[→ View Portfolio](https://your-portfolio-url.vercel.app)**
+
+> Ganti link di atas dengan URL Vercel kamu setelah deploy
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🌙☀️ **Dark / Light Theme** | Toggle antara dark dan light mode |
+| 📜 **Smooth Scroll Navigation** | Navbar auto-highlight section yang sedang dilihat |
+| ⌨️ **Typewriter Animation** | Role text mengetik dan menghapus otomatis |
+| 🎞️ **Entrance Animations** | Setiap section animasi masuk saat di-scroll |
+| 📊 **Skills Showcase** | Semua tools DevOps & IoT dalam satu grid |
+| 🗂️ **Project Gallery** | Cards dengan detail modal, tombol View Repository & Preview |
+| 📄 **PDF Certificate Viewer** | Klik kartu sertifikat → buka PDF di tab baru |
+| 🎓 **Education & Awards** | Layout dua kolom untuk pendidikan dan pencapaian |
+| ⏳ **Experience** | Kartu pengalaman kerja dan organisasi |
+| ↓ **CV Download** | Satu klik untuk download resume |
+| ✉️ **Contact Form** | Membuka email client dengan pesan terisi otomatis |
+| ✨ **Particle Background** | Animasi partikel di background |
+| 📱 **Fully Responsive** | Optimal di mobile, tablet, dan desktop |
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technology |
+|----------|-----------|
+| **Framework** | React.js 18 |
+| **Styling** | Pure CSS3 (no Tailwind / Bootstrap) |
+| **Language** | JavaScript ES6+ |
+| **Animations** | CSS Keyframes + IntersectionObserver API |
+| **Build Tool** | Create React App |
+| **Deployment** | Vercel |
+
+---
+
+## 📁 Project Structure
 
 ```
 portfolio-v3/
 ├── public/
-│   ├── index.html
-│   ├── photo.jpg          ← ⭐ FOTO KAMU (ganti ini!)
-│   ├── projects/
-│   │   ├── kubernetes.jpg
-│   │   ├── ecommerce.jpg
-│   │   ├── iot-fire.jpg
-│   │   └── monitoring.jpg
-│   └── certs/
-│       ├── kubernetes.jpg
-│       ├── cloud.jpg
-│       ├── linux.jpg
-│       ├── iot.jpg
-│       ├── cybersec.jpg
-│       └── devops.jpg
+│   └── index.html
 ├── src/
-│   ├── App.js             ← Semua komponen & data
-│   ├── index.css          ← Semua styling + dark/light theme
-│   └── index.js           ← Entry point
+│   ├── image/                 ← foto profil & project
+│   │   ├── 1.jpeg             (foto profil — hero & about)
+│   │   ├── 2.jpeg             (screenshot project 2)
+│   │   ├── 3.jpeg             (screenshot project 3)
+│   │   └── 4.jpeg             (screenshot project 4)
+│   ├── certs/                 ← file PDF sertifikat
+│   │   ├── sertifikat1.pdf
+│   │   ├── sertifikat2.pdf
+│   │   ├── sertifikat3.pdf
+│   │   ├── sertifikat4.pdf
+│   │   ├── sertifikat5.pdf
+│   │   └── sertifikat6.pdf
+│   ├── cv.pdf                 ← file CV untuk download
+│   ├── App.js                 ← semua komponen React & data
+│   ├── index.css              ← semua styling + dark/light theme
+│   └── index.js               ← entry point
 ├── package.json
 ├── vercel.json
 └── README.md
 ```
 
-## 🚀 Cara Install & Jalankan
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
 
 ```bash
-# 1. Masuk ke folder
-cd portfolio-v3
+node --version    # v16 atau lebih baru
+npm --version     # v8 atau lebih baru
+```
+
+### Installation & Run
+
+```bash
+# 1. Clone repository
+git clone https://github.com/handika-nainggolan/portfolio.git
+cd portfolio
 
 # 2. Install dependencies
 npm install
 
 # 3. Jalankan di localhost
 npm start
-# → buka http://localhost:3000
+# buka http://localhost:3000
 ```
 
-## 📸 Cara Tambah Foto
+### Build Production
 
-### Foto Profil (di hero & about)
-Taruh foto kamu di `public/photo.jpg`
-- Ukuran ideal: **400×400px** (persegi)
-- Format: .jpg atau .png
+```bash
+npm run build
+# hasil build ada di folder /build
+```
 
-### Foto Project
-Taruh screenshot project di `public/projects/`:
-- `kubernetes.jpg` → Kubernetes Blog Platform
-- `ecommerce.jpg`  → Distributed E-Commerce
-- `iot-fire.jpg`   → IoT Fire & Gas Detection
-- `monitoring.jpg` → DevOps Monitoring Platform
-- Ukuran ideal: **800×450px** (landscape)
+---
 
-### Foto Sertifikat
-Taruh foto sertifikat di `public/certs/`:
-- `kubernetes.jpg`, `cloud.jpg`, `linux.jpg`
-- `iot.jpg`, `cybersec.jpg`, `devops.jpg`
-- Ukuran ideal: **600×420px**
+## 📸 Menambahkan Foto & File
+
+### Foto Profil & Project
+Copy file ke `src/image/`:
+```
+1.jpeg  →  foto profil kamu (dipakai di hero & about)
+2.jpeg  →  screenshot project ke-2
+3.jpeg  →  screenshot project ke-3
+4.jpeg  →  screenshot project ke-4
+```
+
+### PDF Sertifikat
+Copy file ke `src/certs/`:
+```
+sertifikat1.pdf  →  Kubernetes & Container Orchestration
+sertifikat2.pdf  →  Cloud Computing Fundamentals
+sertifikat3.pdf  →  Linux System Administration
+sertifikat4.pdf  →  IoT with Arduino & Embedded Systems
+sertifikat5.pdf  →  Del Cyber Security Club
+sertifikat6.pdf  →  DevOps Monitoring & Observability
+```
+
+### CV
+Taruh file di `src/`:
+```
+cv.pdf  →  file CV kamu (otomatis terdownload saat tombol diklik)
+```
+
+---
+
+## ✏️ Edit Konten
+
+Semua data ada di `src/App.js` pada bagian `/* ── DATA ── */`:
+
+```javascript
+const EXPERIENCES    = [ ... ]  // pengalaman kerja & organisasi
+const PROJECTS       = [ ... ]  // project portfolio
+const CERTS          = [ ... ]  // sertifikat
+const AWARDS_LIST    = [ ... ]  // penghargaan & achievement
+const EDUCATION_LIST = [ ... ]  // pendidikan
+```
+
+---
 
 ## 🌐 Deploy ke Vercel
 
-```bash
-# Opsi 1: Via GitHub (recommended)
-# 1. Push ke GitHub
-# 2. Buka vercel.com → New Project → Import repo
-# 3. Framework: Create React App (auto-detect)
-# 4. Klik Deploy ✓
+### Via GitHub (Recommended)
 
-# Opsi 2: Via Vercel CLI
-npm i -g vercel
+```
+1. Push repo ini ke GitHub
+2. Buka vercel.com → Login dengan GitHub
+3. New Project → Import repo portfolio
+4. Framework: Create React App (auto-detect)
+5. Deploy ✅
+```
+
+Setiap `git push` → Vercel **otomatis rebuild & deploy** 🔄
+
+### Via Vercel CLI
+
+```bash
+npm install -g vercel
 vercel
 ```
 
-## ✏️ Cara Edit Data
+---
 
-Semua data ada di `src/App.js`, bagian `/* ── DATA ── */`:
+## 📋 Halaman & Sections
 
-- **PROJECTS** → tambah/edit project
-- **EXPERIENCES** → tambah pengalaman
-- **EDUCATION_LIST** → pendidikan
-- **AWARDS_LIST** → penghargaan
-- **CERTS** → sertifikat
-- **SKILL_GROUPS** → skill per kategori
+| Section | Konten |
+|---------|--------|
+| **Home** | Hero, foto profil, typewriter, tombol CTA, social links |
+| **About** | Foto, bio, stats (4+ projects, 10+ tech, 2+ years), terminal |
+| **Education** | Pendidikan formal + awards & achievements |
+| **Skills** | Grid semua tools & technologies (DevOps + IoT) |
+| **Experience** | Magang, organisasi, dan proyek akademik |
+| **Certificates** | Kartu sertifikat dengan PDF viewer |
+| **Projects** | Gallery project dengan modal detail lengkap |
+| **Contact** | Form kontak + info kontak langsung |
 
-## 🎨 Navigasi
+---
 
-Navbar auto-highlight section yang sedang dilihat saat scroll.
-Klik nama section di navbar → smooth scroll ke section tersebut.
+## 📞 Contact
+
+**Handika Pratama Nainggolan**
+
+- 🎓 Institut Teknologi Del (IT Del) — Teknik Informatika
+- 💼 Aspiring DevOps & IoT Engineer
+- 🐙 GitHub: [@handika-nainggolan](https://github.com/handika-nainggolan)
+- 💼 LinkedIn: [handika-pratama](https://www.linkedin.com/in/handika-pratama-52178332b/)
+- 📧 Email: handikanainggolan24@gmail.com
+- 💬 WhatsApp: +62 822-7631-0317
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+⭐ **Jika portfolio ini bermanfaat, berikan star ya!**
+
+Made with ❤️ by **Handika Pratama Nainggolan**
+
+</div>
