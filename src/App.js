@@ -122,7 +122,7 @@ const PROJECTS = [
   detail: 'Built a fully responsive personal portfolio website from scratch using React.js and pure CSS without any UI framework. Features include dark/light theme toggle, smooth scroll navigation with active section detection, typewriter animation, skill showcase, project gallery with detail modal, PDF certificate viewer, and contact form. Deployed on Vercel.',
   tags: ['React.js', 'CSS3', 'JavaScript', 'Vercel'],
   cls: ['tag-blue', 'tag-purple', 'tag-green', 'tag-orange'],
-  gh: 'https://github.com/handika-nainggolan',  // ganti ke repo portfolio kamu
+  gh: 'https://github.com/handika-nainggolan/Fortofolio-dika',  // ganti ke repo portfolio kamu
   img: foto5,  // ganti dengan screenshot web portfolio kamu
   },
   {
