@@ -194,7 +194,7 @@ vercel
 
 **Handika Pratama Nainggolan**
 
-- 🎓 Institut Teknologi Del (IT Del) — Teknik Informatika
+- 🎓 Institut Teknologi Del (IT Del) — Teknologi Komputer
 - 💼 Aspiring DevOps & IoT Engineer
 - 🐙 GitHub: [@handika-nainggolan](https://github.com/handika-nainggolan)
 - 💼 LinkedIn: [handika-pratama](https://www.linkedin.com/in/handika-pratama-52178332b/)
