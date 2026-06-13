@@ -8,7 +8,6 @@
 
 **[→ View Portfolio](https://your-portfolio-url.vercel.app)**
 
-> Ganti link di atas dengan URL Vercel kamu setelah deploy
 
 ---
 
