@@ -1,27 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './index.css';
 
-// ── Import FOTO PROFIL & PROJECT (taruh di src/image/) ──
-import foto1 from './image/1.jpeg';  // foto profil (hero + about)
-import foto7 from './image/pa.png';  // screenshot project 1
-import foto2 from './image/sister.png';  // screenshot project 2
-import foto3 from './image/sister.png';  // screenshot project 3
-import foto4 from './image/monitoring.png';  // screenshot project 4
-import foto5 from './image/forto.png';  // screenshot project 5
-import foto6 from './image/dika.png';  // screenshot project 6
+import foto1 from './image/1.jpeg';
+import foto7 from './image/pa.png';
+import foto2 from './image/sister.png';
+import foto4 from './image/monitoring.png';
+import foto5 from './image/forto.png';
+import foto6 from './image/dika.png';
 
-// ── CV File — taruh file CV kamu di src/ dengan nama cv.pdf ──
-// Jika belum ada, biarkan dulu dan tambahkan nanti
 let cvFile = null;
 try { cvFile = require('./CV-Handika-Pratama-Nainggolan.pdf'); } catch(e) {}
 
-// ── Import PDF SERTIFIKAT (taruh di src/certs/) ──
-// Ganti nama file sesuai nama PDF sertifikat kamu
 import cert1 from './certs/sertifikat1.pdf';
 import cert4 from './certs/sertifikat4.pdf';
 import cert5 from './certs/sertifikat5.pdf';
 import cert7 from './certs/sertifikat7.pdf';
-
 
 /* ── TYPEWRITER ── */
 function useTypewriter(words, spd=75, del=42, pause=2000) {
@@ -42,6 +35,70 @@ function useTypewriter(words, spd=75, del=42, pause=2000) {
     return ()=>clearTimeout(t);
   },[txt,ph,wi,words,spd,del,pause]);
   return txt;
+}
+
+/* ═══════════════════════════════
+   ANIMATION HOOKS
+   ═══════════════════════════════ */
+function useInView(threshold=0.12) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+    }, { threshold, rootMargin: '0px 0px -30px 0px' });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+}
+
+/* Naik dari bawah */
+function FadeUp({ children, delay=0, style={}, className='' }) {
+  const [ref, v] = useInView();
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: v ? 1 : 0,
+      transform: v ? 'translateY(0)' : 'translateY(44px)',
+      transition: `opacity 0.65s cubic-bezier(.22,.68,0,1.2) ${delay}ms, transform 0.65s cubic-bezier(.22,.68,0,1.2) ${delay}ms`,
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+/* Dari kiri atau kanan */
+function SlideIn({ children, from='left', delay=0, style={}, className='' }) {
+  const [ref, v] = useInView();
+  const tx = from==='left' ? '-56px' : '56px';
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: v ? 1 : 0,
+      transform: v ? 'translateX(0)' : `translateX(${tx})`,
+      transition: `opacity 0.68s cubic-bezier(.22,.68,0,1.2) ${delay}ms, transform 0.68s cubic-bezier(.22,.68,0,1.2) ${delay}ms`,
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+/* Zoom dari tengah */
+function ZoomIn({ children, delay=0, style={}, className='' }) {
+  const [ref, v] = useInView();
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: v ? 1 : 0,
+      transform: v ? 'scale(1)' : 'scale(0.88)',
+      transition: `opacity 0.6s cubic-bezier(.22,.68,0,1.2) ${delay}ms, transform 0.6s cubic-bezier(.22,.68,0,1.2) ${delay}ms`,
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
 }
 
 /* ── SKILL ICONS ── */
@@ -80,118 +137,37 @@ const SkillIcon = ({name}) => ICONS[name] || (
 const SECTIONS = ['hero','about','education','skills','experience','certificates','projects','contact'];
 const NAV_LABELS = ['Home','About','Education','Skills','Experience','Certificates','Projects','Contact'];
 
-// Tools & Technologies — semua jadi satu, tanpa persen
 const ALL_SKILLS = [
-  // DevOps & Infrastructure
   'Linux','Docker','Kubernetes','Git & GitHub','CI/CD',
   'Terraform','Ansible','Prometheus','Grafana','Networking',
-  // IoT & Embedded
   'Arduino','Raspberry Pi','MQTT','Sensors','Embedded Sys',
-  // Programming
-  'Python','JavaScript',
-  // Tools
-  'VS Code','Postman','MongoDB','Kafka','Node.js',
+  'Python','JavaScript','VS Code','Postman','MongoDB','Kafka','Node.js',
 ];
 
 const PROJECTS = [
-  {
-     num: '01',
-  title: 'Smart Aquarium Monitoring System',
-  desc: 'IoT-based smart aquarium monitoring system with real-time water quality monitoring, automatic feeding, and web-based dashboard.',
-  detail: 'Designed and implemented an IoT-based aquarium monitoring system using Arduino microcontroller integrated with multiple sensors (pH, temperature, turbidity, water level). Features include real-time water quality monitoring, automatic feeding mechanism triggered by schedule or manual control, live data visualization on a web-based dashboard, and alert notifications when water parameters are out of safe range. Data transmitted via MQTT protocol to a monitoring server.',
-  tags: ['Arduino', 'IoT', 'MQTT', 'Sensors', 'Dashboard', 'C++'],
-  cls: ['tag-blue', 'tag-green', 'tag-purple', 'tag-orange', 'tag-blue', 'tag-red'],
-  gh: 'https://github.com/handika-nainggolan/smart-aquarium-monitoring-system',
-  img: foto7,
-  },
-  {
-    num:'02',title:'Distributed E-Commerce System',
-    desc:'Event-driven e-commerce using Apache Kafka, MongoDB, Express.js, and microservices for scalable order processing.',
-    detail:'Developed a distributed e-commerce platform using microservices architecture with Apache Kafka for event-driven communication. Built User, Product, and Order services using Express.js and MongoDB, implemented JWT authentication, utilized Redis for caching, and containerized the entire system with Docker for scalable deployment.',
-    tags:['Kafka','MongoDB','Express.js','Node.js','Docker','JWT'],cls:['tag-orange','tag-green','tag-blue','tag-purple','tag-blue','tag-green'],
-    gh:'https://github.com/handika-nainggolan/sistem-terdistribusi',img:foto2
-  },
-  {
-    num:'03',title:'Monitoring Platform',
-    desc:'Automated Linux monitoring platform with self-healing capabilities, logging system, and real-time dashboards powered by Grafana and Prometheus.',
-    detail:'Built a Linux-based monitoring solution using Bash Script, Crontab, Prometheus, and Grafana. Implemented automated service monitoring, self-healing through automatic restarts, activity logging, and real-time infrastructure visualization for CPU, memory, disk, network, and uptime metrics.',
-    tags:['Prometheus','Grafana','Docker','Linux','Node Exporter','Alerting'],cls:['tag-orange','tag-blue','tag-purple','tag-green','tag-blue','tag-red'],
-    gh:'https://github.com/handika-nainggolan/monitoring-platform-sistem',img:foto4
-  },
-  {
-    num: '04',
-  title: 'Personal Portfolio Website',
-  desc: 'Personal portfolio website built with React.js and pure CSS. Features dark/light theme, scroll navigation, typewriter animation, PDF certificate viewer, and responsive design.',
-  detail: 'Built a fully responsive personal portfolio website from scratch using React.js and pure CSS without any UI framework. Features include dark/light theme toggle, smooth scroll navigation with active section detection, typewriter animation, skill showcase, project gallery with detail modal, PDF certificate viewer, and contact form. Deployed on Vercel.',
-  tags: ['React.js', 'CSS3', 'JavaScript', 'Vercel'],
-  cls: ['tag-blue', 'tag-purple', 'tag-green', 'tag-orange'],
-  gh: 'https://github.com/handika-nainggolan/Fortofolio-dika',  // ganti ke repo portfolio kamu
-  img: foto5,  // ganti dengan screenshot web portfolio kamu
-  },
-  {
-   num: '05',
-  title: 'DevOps Node.js Kubernetes Pipeline',
-  desc: 'Full DevOps pipeline for a Node.js app — containerized with Docker, orchestrated on Kubernetes, and automated with CI/CD GitHub Actions.',
-  detail: 'Built a complete end-to-end DevOps pipeline for a Node.js application. Covers containerization with Docker multi-stage builds, Kubernetes deployment using Deployments, Services, ConfigMaps and Secrets, CI/CD automation with GitHub Actions that triggers build, test, and deploy on every git push, and health check probes for production reliability.',
-  tags: ['Node.js', 'Docker', 'Kubernetes', 'GitHub Actions', 'CI/CD'],
-  cls: ['tag-green', 'tag-blue', 'tag-purple', 'tag-orange', 'tag-red'],
-  gh: 'https://github.com/handika-nainggolan/devops-nodejs-kubernetes-pipeline',
-  img: foto6,
-  },
+  {num:'01',title:'Smart Aquarium Monitoring System',desc:'IoT-based smart aquarium monitoring with real-time water quality monitoring, automatic feeding, and web-based dashboard.',detail:'Designed and implemented an IoT-based aquarium monitoring system using Arduino microcontroller integrated with multiple sensors (pH, temperature, turbidity, water level). Features real-time water quality monitoring, automatic feeding mechanism, live data visualization on a web-based dashboard, and alert notifications. Data transmitted via MQTT protocol.',tags:['Arduino','IoT','MQTT','Sensors','Dashboard','C++'],cls:['tag-blue','tag-green','tag-purple','tag-orange','tag-blue','tag-red'],gh:'https://github.com/handika-nainggolan/smart-aquarium-monitoring-system',img:foto7},
+  {num:'02',title:'Distributed E-Commerce System',desc:'Event-driven e-commerce using Apache Kafka, MongoDB, Express.js, and microservices for scalable order processing.',detail:'Developed a distributed e-commerce platform using microservices architecture with Apache Kafka for event-driven communication. Built User, Product, and Order services using Express.js and MongoDB, implemented JWT authentication, utilized Redis for caching, and containerized with Docker.',tags:['Kafka','MongoDB','Express.js','Node.js','Docker','JWT'],cls:['tag-orange','tag-green','tag-blue','tag-purple','tag-blue','tag-green'],gh:'https://github.com/handika-nainggolan/sistem-terdistribusi',img:foto2},
+  {num:'03',title:'Monitoring Platform',desc:'Automated Linux monitoring platform with self-healing capabilities, logging, and real-time dashboards powered by Grafana and Prometheus.',detail:'Built a Linux-based monitoring solution using Bash Script, Crontab, Prometheus, and Grafana. Implemented automated service monitoring, self-healing through automatic restarts, activity logging, and real-time infrastructure visualization for CPU, memory, disk, network, and uptime metrics.',tags:['Prometheus','Grafana','Docker','Linux','Node Exporter','Alerting'],cls:['tag-orange','tag-blue','tag-purple','tag-green','tag-blue','tag-red'],gh:'https://github.com/handika-nainggolan/monitoring-platform-sistem',img:foto4},
+  {num:'04',title:'Personal Portfolio Website',desc:'Personal portfolio website built with React.js and pure CSS. Features dark/light theme, scroll navigation, typewriter animation, PDF certificate viewer, and responsive design.',detail:'Built a fully responsive personal portfolio website from scratch using React.js and pure CSS without any UI framework. Features include dark/light theme toggle, smooth scroll navigation with active section detection, typewriter animation, skill showcase, project gallery with detail modal, PDF certificate viewer, and contact form. Deployed on Vercel.',tags:['React.js','CSS3','JavaScript','Vercel'],cls:['tag-blue','tag-purple','tag-green','tag-orange'],gh:'https://github.com/handika-nainggolan/Fortofolio-dika',img:foto5},
+  {num:'05',title:'DevOps Node.js Kubernetes Pipeline',desc:'Full DevOps pipeline for a Node.js app — containerized with Docker, orchestrated on Kubernetes, and automated with CI/CD GitHub Actions.',detail:'Built a complete end-to-end DevOps pipeline for a Node.js application. Covers containerization with Docker multi-stage builds, Kubernetes deployment using Deployments, Services, ConfigMaps and Secrets, CI/CD automation with GitHub Actions that triggers build, test, and deploy on every git push.',tags:['Node.js','Docker','Kubernetes','GitHub Actions','CI/CD'],cls:['tag-green','tag-blue','tag-purple','tag-orange','tag-red'],gh:'https://github.com/handika-nainggolan/devops-nodejs-kubernetes-pipeline',img:foto6},
 ];
 
 const EXPERIENCES = [
-  {title:'DevOps Engineer Intern',org:'PT Telkom Indonesia',type:'Internship',date:'february 2026 – july 2026',desc:'Assisted infrastructure team in implementing DevOps practices. Containerized applications with Docker, managed Kubernetes deployments, built CI/CD pipelines, and performed monitoring with Prometheus & Grafana across Telkoms internal platforms.'},
-
-  {
-    title:'Member – Del Cyber Security Club',
-    org:'Institut Teknologi Del',
-    type:'Organization',
-    date:'2023 – Present',
-    desc:'Participated in cybersecurity workshops, ethical hacking activities, network security learning, and security awareness programs.'
-  },
-
-  {
-    title:'Huawei ICT Competition National Finalist',
-    org:'Huawei ICT Competition',
-    type:'Competition',
-    date:'2025',
-    desc:'Participated in the Computing Track National Final, focusing on cloud computing, networking, operating systems, and ICT technologies.'
-  },
-
-  {
-    title:'DevOps Monitoring Platform',
-    org:'Personal Project',
-    type:'Project',
-    date:'2026',
-    desc:'Built a Linux-based monitoring platform using Bash Script, Crontab, Prometheus, Grafana, and Docker with automated monitoring, logging, and self-healing capabilities.'
-  },
-
-  {
-    title: 'CTF Competition',
-    org: 'Del Cyber Security Club – IT Del',
-    type: 'Competition',
-    date: '2024',
-    desc: 'Participated in Capture The Flag competitions covering categories such as web exploitation, reverse engineering, cryptography, and forensics challenges.'
-   },
-
-  {
-    title:'Smart Aquarium Monitoring System',
-    org:'Academic Project',
-    type:'Project',
-    date:'2025',
-    desc:'Designed and implemented an IoT-based aquarium monitoring system with real-time water quality monitoring, automatic feeding, and a web-based dashboard.'
-  }
+  {title:'DevOps Engineer Intern',org:'PT Telkom Indonesia',type:'Internship',date:'February 2026 – July 2026',desc:'Assisted infrastructure team in implementing DevOps practices. Containerized applications with Docker, managed Kubernetes deployments, built CI/CD pipelines, and performed monitoring with Prometheus & Grafana across Telkoms internal platforms.'},
+  {title:'Member – Del Cyber Security Club',org:'Institut Teknologi Del',type:'Organization',date:'2023 – Present',desc:'Participated in cybersecurity workshops, ethical hacking activities, network security learning, and security awareness programs.'},
+  {title:'Huawei ICT Competition National Finalist',org:'Huawei ICT Competition',type:'Competition',date:'2025',desc:'Participated in the Computing Track National Final, focusing on cloud computing, networking, operating systems, and ICT technologies.'},
+  {title:'DevOps Monitoring Platform',org:'Personal Project',type:'Project',date:'2026',desc:'Built a Linux-based monitoring platform using Bash Script, Crontab, Prometheus, Grafana, and Docker with automated monitoring, logging, and self-healing capabilities.'},
+  {title:'CTF Competition',org:'Del Cyber Security Club – IT Del',type:'Competition',date:'2024',desc:'Participated in Capture The Flag competitions covering web exploitation, reverse engineering, cryptography, and forensics challenges.'},
+  {title:'Smart Aquarium Monitoring System',org:'Academic Project',type:'Project',date:'2025',desc:'Designed and implemented an IoT-based aquarium monitoring system with real-time water quality monitoring, automatic feeding, and a web-based dashboard.'},
 ];
 
-const EDUCATION_LIST = [{title:'Institut Teknologi Del (IT Del)',sub:' Diploma in Computer Engineering',date:'2023 – Present'}];
+const EDUCATION_LIST = [{title:'Institut Teknologi Del (IT Del)',sub:'Diploma in Computer Engineering',date:'2023 – Present'}];
 const AWARDS_LIST = [
-   {title:'National Final Participant – Huawei ICT Competition 2024–2025 (Computing Track)',sub:'competition',date:'December 2024'},
-   {title:'Red Team Cyberwolves Academy',sub:'Hactrace Indonesia',date:'May 2026'},
-   {title:'started with AWS',sub:'Certification',date:'october 2025'},
+  {title:'National Final Participant – Huawei ICT Competition 2024–2025 (Computing Track)',sub:'competition',date:'December 2024'},
+  {title:'Red Team Cyberwolves Academy',sub:'Hactrace Indonesia',date:'May 2026'},
+  {title:'Started with AWS',sub:'Certification',date:'October 2025'},
 ];
 
-// Sertifikat — pakai PDF import dari src/certs/
 const CERTS = [
   {title:'Introduction to IoT and Digital Transformation',issuer:'Cisco',date:'2025',desc:'IoT fundamentals, connected devices, digital transformation, and smart technology concepts.',em:'📡',pdf:cert1},
   {title:'Network Fundamental',issuer:'Aguna Course',date:'2025',desc:'Networking basics, IP addressing, network protocols, routing, and connectivity concepts.',em:'🌐',pdf:cert4},
@@ -199,36 +175,30 @@ const CERTS = [
   {title:'Introduction to Cloud Computing',issuer:'Simplilearn',date:'2025',desc:'Cloud computing fundamentals, service models, deployment models, and cloud technologies.',em:'☁️',pdf:cert7},
 ];
 
-
 /* ── UTILS ── */
-function useReveal() {
-  useEffect(()=>{
-    const els=document.querySelectorAll('.reveal');
-    const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
-    els.forEach(el=>obs.observe(el));
-    return()=>obs.disconnect();
-  });
-}
 function useActiveSection() {
-  const [active,setActive]=useState('hero');
-  useEffect(()=>{
-    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)setActive(e.target.id);});},{threshold:0.35});
-    SECTIONS.forEach(s=>{const el=document.getElementById(s);if(el)obs.observe(el);});
-    return()=>obs.disconnect();
-  },[]);
+  const [active, setActive] = useState('hero');
+  useEffect(() => {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { threshold: 0.35 });
+    SECTIONS.forEach(s => { const el = document.getElementById(s); if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
   return active;
 }
 
-/* ── COMPONENTS ── */
-function Loader({done}) {
-  const [msg,setMsg]=useState('initializing...');
-  useEffect(()=>{
-    const msgs=['loading modules...','starting containers...','ready ✓'];
-    let i=0; const t=setInterval(()=>{setMsg(msgs[i++]);if(i>=msgs.length)clearInterval(t);},600);
-    return()=>clearInterval(t);
-  },[]);
+/* ── LOADER ── */
+function Loader({ done }) {
+  const [msg, setMsg] = useState('initializing...');
+  useEffect(() => {
+    const msgs = ['loading modules...', 'starting containers...', 'ready ✓'];
+    let i = 0;
+    const t = setInterval(() => { setMsg(msgs[i++]); if (i >= msgs.length) clearInterval(t); }, 600);
+    return () => clearInterval(t);
+  }, []);
   return (
-    <div className={`loader${done?' done':''}`}>
+    <div className={`loader${done ? ' done' : ''}`}>
       <div className="loader-logo" style={{fontFamily:'JetBrains Mono,monospace'}}>[HPN]</div>
       <div className="loader-bar"><div className="loader-fill"/></div>
       <div className="loader-txt">{msg}</div>
@@ -236,88 +206,68 @@ function Loader({done}) {
   );
 }
 
+/* ── PARTICLES ── */
 function Particles() {
-  const ref=useRef(null);
-  useEffect(()=>{
-    const canvas=ref.current,ctx=canvas.getContext('2d');
-    let W=canvas.width=window.innerWidth,H=canvas.height=window.innerHeight;
-    const pts=Array.from({length:45},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.2+.3,a:Math.random()*.25+.06}));
+  const ref = useRef(null);
+  useEffect(() => {
+    const canvas = ref.current, ctx = canvas.getContext('2d');
+    let W = canvas.width = window.innerWidth, H = canvas.height = window.innerHeight;
+    const pts = Array.from({length:45}, () => ({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.2+.3,a:Math.random()*.25+.06}));
     let raf;
-    const draw=()=>{
+    const draw = () => {
       ctx.clearRect(0,0,W,H);
-      pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(108,99,255,${p.a})`;ctx.fill();});
-      for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(108,99,255,${.035*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke();}}
-      raf=requestAnimationFrame(draw);
+      pts.forEach(p => {p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(108,99,255,${p.a})`;ctx.fill();});
+      for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(108,99,255,${.035*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke();}}
+      raf = requestAnimationFrame(draw);
     };
     draw();
-    const resize=()=>{W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;};
-    window.addEventListener('resize',resize);
-    return()=>{cancelAnimationFrame(raf);window.removeEventListener('resize',resize);};
-  },[]);
+    const resize = () => { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; };
+    window.addEventListener('resize', resize);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
+  }, []);
   return <canvas ref={ref} id="particles-canvas"/>;
 }
 
-function Navbar({active,theme,toggleTheme}) {
-  const [scrolled,setScrolled]=useState(false);
-  const [open,setOpen]=useState(false);
-  useEffect(()=>{const h=()=>setScrolled(window.scrollY>30);window.addEventListener('scroll',h);return()=>window.removeEventListener('scroll',h);},[]);
-  const goTo=id=>{setOpen(false);document.getElementById(id)?.scrollIntoView({behavior:'smooth'});};
+/* ── NAVBAR ── */
+function Navbar({ active, theme, toggleTheme }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  useEffect(() => { const h = () => setScrolled(window.scrollY > 30); window.addEventListener('scroll', h); return () => window.removeEventListener('scroll', h); }, []);
+  const goTo = id => { setOpen(false); document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); };
   return (
-    <nav className={`navbar${scrolled?' scrolled':''}`}>
-      <div className="nav-logo" onClick={()=>goTo('hero')}><span>&lt;</span>Dika Pratama<span>/&gt;</span></div>
-      <button className="hamburger" onClick={()=>setOpen(o=>!o)}>{open?'✕':'☰'}</button>
-      <ul className={`nav-links${open?' open':''}`}>
-        {SECTIONS.map((s,i)=>(
-          <li key={s}><a className={active===s?'active':''} onClick={()=>goTo(s)}>{NAV_LABELS[i]}</a></li>
+    <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
+      <div className="nav-logo" onClick={() => goTo('hero')}><span>&lt;</span>Dika Pratama<span>/&gt;</span></div>
+      <button className="hamburger" onClick={() => setOpen(o => !o)}>{open ? '✕' : '☰'}</button>
+      <ul className={`nav-links${open ? ' open' : ''}`}>
+        {SECTIONS.map((s,i) => (
+          <li key={s}><a className={active===s ? 'active' : ''} onClick={() => goTo(s)}>{NAV_LABELS[i]}</a></li>
         ))}
       </ul>
-      <button className="theme-btn" onClick={toggleTheme}>{theme==='dark'?'☀️':'🌙'}</button>
+      <button className="theme-btn" onClick={toggleTheme}>{theme==='dark' ? '☀️' : '🌙'}</button>
     </nav>
   );
 }
 
 /* ── PDF MODAL ── */
-function PdfModal({cert, onClose}) {
+function PdfModal({ cert, onClose }) {
   if (!cert) return null;
-
   React.useEffect(() => {
-    // ESC to close
-    const onKey = e => { if (e.key === 'Escape') onClose(); };
-    // Lock body scroll
+    const onKey = e => { if (e.key==='Escape') onClose(); };
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener('keydown', onKey);
-    };
+    return () => { document.body.style.overflow = prev; window.removeEventListener('keydown', onKey); };
   }, [onClose]);
-
-  const handleOpenNewTab = () => {
-    window.open(cert.pdf, '_blank', 'noopener,noreferrer');
-  };
-
   return (
-    <div
-      className="pdf-overlay"
-      onClick={onClose}
-      onWheel={e => e.stopPropagation()}
-      onTouchMove={e => e.stopPropagation()}
-    >
-      <div
-        className="pdf-modal"
-        onClick={e => e.stopPropagation()}
-        onWheel={e => e.stopPropagation()}
-        onTouchMove={e => e.stopPropagation()}
-      >
+    <div className="pdf-overlay" onClick={onClose} onWheel={e=>e.stopPropagation()}>
+      <div className="pdf-modal" onClick={e=>e.stopPropagation()} onWheel={e=>e.stopPropagation()}>
         <div className="pdf-modal-header">
           <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
             <span style={{fontSize:'1.3rem'}}>{cert.em}</span>
             <span className="pdf-modal-title">{cert.title}</span>
           </div>
           <div style={{display:'flex',gap:'8px',alignItems:'center'}}>
-            <button
-              onClick={handleOpenNewTab}
+            <button onClick={() => window.open(cert.pdf,'_blank','noopener,noreferrer')}
               style={{display:'flex',alignItems:'center',gap:5,padding:'6px 14px',borderRadius:8,background:'var(--accent)',color:'#fff',fontFamily:'JetBrains Mono,monospace',fontSize:'.72rem',fontWeight:600,border:'none',cursor:'pointer'}}>
               📄 Lihat Sertifikat
             </button>
@@ -325,20 +275,22 @@ function PdfModal({cert, onClose}) {
           </div>
         </div>
         <div className="pdf-modal-body" onWheel={e=>e.stopPropagation()}>
-          <iframe
-            src={cert.pdf + '#toolbar=1&navpanes=0&scrollbar=1&view=FitH'}
-            title={cert.title}
-            style={{width:'100%',height:'72vh',border:'none',borderRadius:10,background:'#fff'}}
-          />
+          <iframe src={cert.pdf+'#toolbar=1&navpanes=0&scrollbar=1&view=FitH'} title={cert.title}
+            style={{width:'100%',height:'72vh',border:'none',borderRadius:10,background:'#fff'}}/>
         </div>
       </div>
     </div>
   );
 }
 
-/* ── HERO ── */
+/* ═══════════════════════════════════════════
+   HERO — slide dari kiri & kanan saat buka web
+   ═══════════════════════════════════════════ */
 function HeroSection() {
-  const typed=useTypewriter(['Aspiring DevOps Engineer','IoT Systems Builder','Cloud & Linux Enthusiast','Kubernetes explorer','Infrastructure Automation leaner',]);
+  const typed = useTypewriter(['Aspiring DevOps Engineer','IoT Systems Builder','Cloud & Linux Enthusiast','Kubernetes Explorer','Infrastructure Automation Learner']);
+  const [ready, setReady] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 400); return () => clearTimeout(t); }, []);
+
   const handleCV = () => {
     if (cvFile) {
       const a = document.createElement('a');
@@ -346,35 +298,63 @@ function HeroSection() {
       a.download = 'CV-Handika-Pratama-Nainggolan.pdf';
       a.click();
     } else {
-      alert('File CV belum ditambahkan. Taruh file cv.pdf di folder src/');
+      alert('Taruh file CV kamu di src/ dengan nama CV-Handika-Pratama-Nainggolan.pdf');
     }
   };
+
+  /* helper style untuk animasi hero */
+  const fromLeft = (delay, extraTx='-50px') => ({
+    opacity: ready ? 1 : 0,
+    transform: ready ? 'translateX(0)' : `translateX(${extraTx})`,
+    transition: `opacity 0.7s cubic-bezier(.22,.68,0,1.2) ${delay}ms, transform 0.7s cubic-bezier(.22,.68,0,1.2) ${delay}ms`,
+  });
+
   return (
     <section id="hero">
       <div className="hero-inner">
+        {/* ── Kiri: slide dari kiri ── */}
         <div>
-          <div className="hero-badge"><span className="dot"/>Available for Opportunities</div>
-          <div className="hero-sub mono">// hi, I'm</div>
-          <h1 className="hero-name"><span className="grad">Handika</span><br/>Pratama</h1>
-          <div className="hero-role">
-            <span style={{color:'var(--accent)'}}>&gt; </span>
-            <span style={{color:'var(--accent2)'}}>{typed}</span>
-            <span className="type-cur">|</span>
+          <div style={fromLeft(0)}>
+            <div className="hero-badge"><span className="dot"/>Available for Opportunities</div>
           </div>
-          <p className="hero-desc">IT Del student interested in DevOps, Cloud Computing, Linux, Kubernetes, and IoT — enjoy building efficient systems and technology-based solutions."</p>
-          <div className="hero-btns">
-            <a className="btn btn-accent" href="#projects" onClick={e=>{e.preventDefault();document.getElementById('projects')?.scrollIntoView({behavior:'smooth'});}}>View Projects →</a>
-            <a className="btn btn-outline" href="#contact" onClick={e=>{e.preventDefault();document.getElementById('contact')?.scrollIntoView({behavior:'smooth'});}}>Contact Me</a>
-            <button className="btn btn-ghost" onClick={handleCV}>↓ Download CV</button>
+          <div style={fromLeft(100)}>
+            <div className="hero-sub mono">// hi, I'm</div>
           </div>
-          <div className="hero-socials">
-            {[{href:'https://github.com/handika-nainggolan',l:'GH'},{href:'https://www.linkedin.com/in/handika-pratama-52178332b/',l:'in'},{href:'mailto:handikanainggolan24@gmail.com',l:'@'},{href:'https://wa.me/6282276310317',l:'WA'}].map(s=>(
-              <a key={s.l} href={s.href} target="_blank" rel="noopener noreferrer" className="social-btn">{s.l}</a>
-            ))}
+          <div style={fromLeft(200,'-70px')}>
+            <h1 className="hero-name"><span className="grad">Handika</span><br/>Pratama</h1>
+          </div>
+          <div style={fromLeft(330)}>
+            <div className="hero-role">
+              <span style={{color:'var(--accent)'}}>&gt; </span>
+              <span style={{color:'var(--accent2)'}}>{typed}</span>
+              <span className="type-cur">|</span>
+            </div>
+          </div>
+          <div style={fromLeft(430)}>
+            <p className="hero-desc">IT Del student interested in DevOps, Cloud Computing, Linux, Kubernetes, and IoT — enjoy building efficient systems and technology-based solutions.</p>
+          </div>
+          <div style={fromLeft(530)}>
+            <div className="hero-btns">
+              <a className="btn btn-accent" href="#projects" onClick={e=>{e.preventDefault();document.getElementById('projects')?.scrollIntoView({behavior:'smooth'});}}>View Projects →</a>
+              <a className="btn btn-outline" href="#contact" onClick={e=>{e.preventDefault();document.getElementById('contact')?.scrollIntoView({behavior:'smooth'});}}>Contact Me</a>
+              <button className="btn btn-ghost" onClick={handleCV}>↓ Download CV</button>
+            </div>
+          </div>
+          <div style={fromLeft(630)}>
+            <div className="hero-socials">
+              {[{href:'https://github.com/handika-nainggolan',l:'GH'},{href:'https://www.linkedin.com/in/handika-pratama-52178332b/',l:'in'},{href:'mailto:handikanainggolan24@gmail.com',l:'@'},{href:'https://wa.me/6282276310317',l:'WA'}].map(s=>(
+                <a key={s.l} href={s.href} target="_blank" rel="noopener noreferrer" className="social-btn">{s.l}</a>
+              ))}
+            </div>
           </div>
         </div>
-        {/* Avatar dengan zoom on hover */}
-        <div className="hero-avatar">
+
+        {/* ── Kanan: slide dari kanan + zoom ── */}
+        <div className="hero-avatar" style={{
+          opacity: ready ? 1 : 0,
+          transform: ready ? 'translateX(0) scale(1)' : 'translateX(70px) scale(0.88)',
+          transition: 'opacity 0.75s cubic-bezier(.22,.68,0,1.2) 280ms, transform 0.75s cubic-bezier(.22,.68,0,1.2) 280ms',
+        }}>
           <div className="avatar-ring"/>
           <div className="avatar-wrap">
             <img src={foto1} alt="Handika Pratama" onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>
@@ -383,38 +363,47 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll Down Indicator */}
-      <div className="scroll-down" onClick={()=>document.getElementById('about')?.scrollIntoView({behavior:'smooth'})}>
-        <span className="scroll-down-text">Scroll down for more</span>
-        <div className="scroll-down-arrow">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 5v14M5 12l7 7 7-7"/>
-          </svg>
+      {/* Scroll down indicator */}
+      <div style={{
+        opacity: ready ? 1 : 0,
+        transform: ready ? 'translateY(0)' : 'translateY(20px)',
+        transition: 'opacity 0.7s ease 850ms, transform 0.7s ease 850ms',
+      }}>
+        <div className="scroll-down" onClick={()=>document.getElementById('about')?.scrollIntoView({behavior:'smooth'})}>
+          <span className="scroll-down-text">Scroll down for more</span>
+          <div className="scroll-down-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ── ABOUT ── */
+/* ═══════════════════════════════════════════
+   ABOUT — foto slide kiri, teks slide kanan
+   ═══════════════════════════════════════════ */
 function AboutSection() {
-  useReveal();
   return (
     <section id="about">
-      <div className="sec-head wrap"><span className="sec-bg-title">ABOUT ME</span><h2>About Me</h2></div>
+      <FadeUp delay={0}>
+        <div className="sec-head wrap"><span className="sec-bg-title">ABOUT ME</span><h2>About Me</h2></div>
+      </FadeUp>
       <div className="about-inner">
-        {/* Photo dengan zoom on hover */}
-        <div className="about-photo reveal">
+        <SlideIn from="left" delay={120} className="about-photo">
           <div className="photo-accent-bg"/>
           <div className="photo-dots">{Array.from({length:25}).map((_,i)=><span key={i}/>)}</div>
           <div className="photo-frame">
             <img src={foto1} alt="Handika Pratama" onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>
             <div className="photo-ph" style={{display:'none'}}>HP</div>
           </div>
-        </div>
-        <div className="about-content reveal d2">
+        </SlideIn>
+
+        <SlideIn from="right" delay={230} className="about-content">
           <div className="hero-badge" style={{marginBottom:'1rem'}}><span className="dot"/>Open to Work</div>
-          <h2>Hi,👋 i'm <span className="grad">Handika Pratama</span></h2>
+          <h2>Hi 👋 i'm <span className="grad">Handika Pratama</span></h2>
           <div className="about-role">Aspiring DevOps & IoT Engineer 🌐 — Institut Teknologi Del</div>
           <p>Passionate technology student focused on <strong>DevOps, Cloud Computing, and IoT systems</strong>. During my studies, I actively explored CI/CD pipelines, Docker, and Kubernetes — building a solid foundation that I'm continuing to grow.</p>
           <p>On the IoT side, I design <strong>embedded systems</strong> using Arduino, sensors, and MQTT protocols — bridging the physical and digital worlds.</p>
@@ -438,258 +427,25 @@ function AboutSection() {
             <a className="btn btn-accent" href="#contact" onClick={e=>{e.preventDefault();document.getElementById('contact')?.scrollIntoView({behavior:'smooth'});}}>Contact With Me 💬</a>
             <a className="btn btn-outline" href="#projects" onClick={e=>{e.preventDefault();document.getElementById('projects')?.scrollIntoView({behavior:'smooth'});}}>My Projects →</a>
           </div>
-        </div>
+        </SlideIn>
       </div>
     </section>
   );
 }
 
-/* ── SKILL ITEM (no percentage, just icon + name) ── */
-function SkillItem({name, delay}) {
-  const [show, setShow] = useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setShow(true),delay);return()=>clearTimeout(t);},[delay]);
-  return (
-    <div className="skill-item" style={{
-      opacity:show?1:0,
-      transform:show?'translateY(0)':'translateY(18px)',
-      transition:`opacity .4s ease,transform .4s ease`,
-    }}>
-      <div className="skill-icon-box"><SkillIcon name={name}/></div>
-      <div className="skill-name">{name}</div>
-    </div>
-  );
-}
-
-/* ── SKILLS — single grid, no tabs, no percentage ── */
-function SkillsSection() {
-  return (
-    <section id="skills">
-      <div className="wrap">
-        <div className="sec-head">
-          <span className="sec-bg-title">TECH STACK</span>
-          <h2>Tools & Technologies</h2>
-        </div>
-        <p style={{textAlign:'center',color:'var(--text2)',fontSize:'.88rem',marginBottom:'2.5rem'}}>
-          Technologies I use as a DevOps & IoT Engineer
-        </p>
-        <div className="skills-grid" style={{gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))'}}>
-          {ALL_SKILLS.map((name,i)=>(
-            <SkillItem key={name} name={name} delay={i*40}/>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── PROJECT DETAIL MODAL ── */
-function ProjectModal({project, onClose}) {
-  if (!project) return null;
-  useEffect(()=>{
-    const h = e => { if(e.key==='Escape') onClose(); };
-    window.addEventListener('keydown', h);
-    document.body.style.overflow = 'hidden';
-    return () => { window.removeEventListener('keydown', h); document.body.style.overflow = ''; };
-  },[onClose]);
-  return (
-    <div className="pdf-overlay" onClick={onClose}>
-      <div className="proj-modal" onClick={e=>e.stopPropagation()}>
-        {/* Header */}
-        <div className="proj-modal-header">
-          <div>
-            <div style={{fontFamily:'JetBrains Mono,monospace',fontSize:'.7rem',color:'var(--accent)',letterSpacing:'.1em',marginBottom:4}}>PROJECT {project.num}</div>
-            <div style={{fontSize:'1.2rem',fontWeight:800,color:'var(--text)'}}>{project.title}</div>
-          </div>
-          <button className="pdf-modal-close" onClick={onClose}>✕</button>
-        </div>
-        {/* Image */}
-        <div style={{width:'100%',height:220,overflow:'hidden',position:'relative',background:'var(--bg3)',flexShrink:0}}>
-          <img src={project.img} alt={project.title}
-            style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center center',display:'block'}}
-            onError={e=>{e.target.style.display='none';}}/>
-          <div style={{position:'absolute',bottom:0,left:0,right:0,height:80,background:'linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 100%)'}}/>
-        </div>
-        {/* Body */}
-        <div style={{padding:'1.75rem',overflowY:'auto',flex:1}}>
-          <div style={{display:'flex',flexWrap:'wrap',gap:'.4rem',marginBottom:'1.25rem'}}>
-            {project.tags.map((t,j)=><span key={t} className={`tag ${project.cls[j]||'tag-blue'}`}>{t}</span>)}
-          </div>
-          <p style={{fontSize:'.9rem',color:'var(--text2)',lineHeight:1.9,marginBottom:'1.5rem'}}>{project.detail}</p>
-          {/* Buttons */}
-          <div style={{display:'flex',gap:'.75rem',flexWrap:'wrap'}}>
-            <a href={project.gh} target="_blank" rel="noopener noreferrer" className="btn btn-accent">
-              View Repository →
-            </a>
-            <button className="btn btn-ghost" onClick={onClose}>
-              ✕ Close
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── PROJECTS ── */
-function ProjectsSection() {
-  const [showAll, setShowAll] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const sectionRef = useRef(null);
-  const visible = showAll ? PROJECTS : PROJECTS.slice(0,4);
-
-  const handleShowLess = () => {
-    setShowAll(false);
-    // scroll back to top of projects section
-    setTimeout(() => {
-      sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
-  };
-
-  return (
-    <>
-      <section id="projects" ref={sectionRef}>
-        <div className="wrap">
-          <div className="sec-head"><span className="sec-bg-title">PORTFOLIO</span><h2>Projects I've Built 🗂️</h2></div>
-          <p style={{textAlign:'center',color:'var(--text2)',fontSize:'.88rem',marginBottom:'2.5rem'}}>Projects created while learning DevOps and IoT engineering.</p>
-
-          <div className="projects-grid">
-            {visible.map((p,i)=>(
-              <div key={p.num} className="card proj-card"
-                style={{animation:`fadeUp .45s ease ${(i%4)*0.08}s both`}}>
-                <div className="proj-img">
-                  <img src={p.img} alt={p.title} onError={e=>{e.target.style.display='none';}}/>
-                  <div className="proj-img-ph">
-                    <svg viewBox="0 0 80 60" width="80" height="60">
-                      <path d="M10 50L10 10L70 10L70 50z" fill="none" stroke="rgba(108,99,255,0.2)" strokeWidth="2"/>
-                      <circle cx="25" cy="25" r="8" fill="rgba(108,99,255,0.1)"/>
-                      <path d="M10 40L28 24L45 38L58 28L70 40" fill="none" stroke="rgba(108,99,255,0.25)" strokeWidth="2"/>
-                    </svg>
-                  </div>
-                </div>
-                <div className="proj-body">
-                  <div className="proj-num">{p.num}</div>
-                  <div className="proj-title">{p.title}</div>
-                  <div className="proj-desc">{p.desc}</div>
-                  <div className="proj-tags">{p.tags.slice(0,4).map((t,j)=><span key={t} className={`tag ${p.cls[j]||'tag-blue'}`}>{t}</span>)}</div>
-                  <div className="proj-links">
-                    <button className="btn btn-accent" style={{padding:'8px 18px',fontSize:'.78rem'}} onClick={()=>setSelected(p)}>
-                      Details ↗
-                    </button>
-                    <a href={p.gh} target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{padding:'8px 18px',fontSize:'.78rem'}}>
-                      Preview
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* View All button — hanya muncul saat belum showAll */}
-          {!showAll && PROJECTS.length > 4 && (
-            <div style={{textAlign:'center',marginTop:'2.5rem'}}>
-              <button className="btn btn-outline" style={{padding:'12px 32px',fontSize:'.82rem'}}
-                onClick={()=>setShowAll(true)}>
-                View All Projects ↓
-              </button>
-            </div>
-          )}
-
-          {/* Show Less button — muncul saat showAll, klik scroll balik ke atas projects */}
-          {showAll && (
-            <div style={{textAlign:'center',marginTop:'2.5rem'}}>
-              <button className="btn btn-ghost" style={{padding:'12px 32px',fontSize:'.82rem'}}
-                onClick={handleShowLess}>
-                ↑ Show Less
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* CTA Section — hanya tampil saat TIDAK showAll */}
-      {!showAll && (
-        <section style={{padding:'5rem 0',background:'var(--bg2)',position:'relative',zIndex:1}}>
-          <div className="wrap" style={{textAlign:'center'}}>
-            <div style={{
-              maxWidth:650,margin:'0 auto',
-              padding:'3.5rem 2.5rem',
-              background:'var(--card)',
-              border:'1px solid var(--border)',
-              borderRadius:24,
-              position:'relative',
-              overflow:'hidden',
-            }}>
-              <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, rgba(108,99,255,0.07) 0%, transparent 70%)',pointerEvents:'none'}}/>
-
-              {/* Let's Work Together */}
-              <div style={{fontFamily:'JetBrains Mono,monospace',fontSize:'.72rem',color:'var(--accent)',letterSpacing:'.18em',textTransform:'uppercase',marginBottom:'1.25rem',position:'relative'}}>
-                Let's Work Together
-              </div>
-
-              {/* Have a project in mind? */}
-              <h2 style={{fontSize:'clamp(1.6rem,3.5vw,2.4rem)',fontWeight:900,color:'var(--text)',letterSpacing:'-0.04em',marginBottom:'1rem',lineHeight:1.15,position:'relative'}}>
-                Have a project in mind?
-              </h2>
-
-              {/* Let's build it together. */}
-              <p style={{fontSize:'clamp(1rem,2vw,1.3rem)',fontWeight:600,position:'relative',
-                background:'linear-gradient(135deg,var(--accent),var(--accent3))',
-                WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',
-                marginBottom:'2rem',
-              }}>
-                Let's build it together.
-              </p>
-
-              <div style={{position:'relative'}}>
-                <a className="btn btn-accent" href="#contact" style={{padding:'12px 32px',fontSize:'.88rem'}}
-                  onClick={e=>{e.preventDefault();document.getElementById('contact')?.scrollIntoView({behavior:'smooth'});}}>
-                  Get In Touch 📩
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {selected && <ProjectModal project={selected} onClose={()=>setSelected(null)}/>}
-    </>
-  );
-}
-
-/* ── EXPERIENCE ── */
-function ExperienceSection() {
-  useReveal();
-  return (
-    <section id="experience">
-      <div className="wrap">
-        <div className="sec-head"><span className="sec-bg-title">EXPERIENCE</span><h2>Experiences ⏳</h2></div>
-        <p className="exp-intro">Here are the experiences I have had and am currently involved in.</p>
-        <div className="exp-grid">
-          {EXPERIENCES.map((e,i)=>(
-            <div key={e.title} className={`card exp-card reveal d${(i%4)+1}`}>
-              <div className="exp-title">{e.title}</div>
-              <div className="exp-org">{e.org}</div>
-              <div className="exp-type">| {e.type}</div>
-              <div className="exp-date">📅 {e.date}</div>
-              <div className="exp-desc">{e.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── EDUCATION ── */
+/* ═══════════════════════════════════════════
+   EDUCATION — dua kolom slide kiri & kanan
+   ═══════════════════════════════════════════ */
 function EducationSection() {
-  useReveal();
   return (
     <section id="education">
       <div className="wrap">
-        <div className="sec-head"><span className="sec-bg-title">EDUCATION</span><h2>Educations 🎓 & Awards 🏆</h2></div>
-        <p className="edu-intro">My formal education background and achievements I've reached.</p>
+        <FadeUp delay={0}>
+          <div className="sec-head"><span className="sec-bg-title">EDUCATION</span><h2>Educations 🎓 & Awards 🏆</h2></div>
+          <p className="edu-intro">My formal education background and achievements I've reached.</p>
+        </FadeUp>
         <div className="edu-grid">
-          <div className="reveal">
+          <SlideIn from="left" delay={150}>
             <div className="edu-col-label">🎓 Educations</div>
             <div className="edu-panel">
               {EDUCATION_LIST.map(e=>(
@@ -700,8 +456,8 @@ function EducationSection() {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="reveal d2">
+          </SlideIn>
+          <SlideIn from="right" delay={250}>
             <div className="edu-col-label">🏆 Awards & Achievements</div>
             <div className="edu-panel">
               {AWARDS_LIST.map(a=>(
@@ -712,78 +468,225 @@ function EducationSection() {
                 </div>
               ))}
             </div>
-          </div>
+          </SlideIn>
         </div>
       </div>
     </section>
   );
 }
 
-/* ── CERT CARD — PDF thumbnail preview + zoom + click to open ── */
-function CertCard({cert, idx, onOpen}) {
-  const [show, setShow] = useState(false);
-  const [hovered, setHovered] = useState(false);
+/* ═══════════════════════════════════════════
+   SKILLS — icon zoom masuk satu per satu
+   ═══════════════════════════════════════════ */
+function SkillItem({ name, index }) {
+  const [ref, v] = useInView(0.05);
+  return (
+    <div ref={ref} className="skill-item" style={{
+      opacity: v ? 1 : 0,
+      transform: v ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.85)',
+      transition: `opacity 0.5s cubic-bezier(.22,.68,0,1.2) ${index*40}ms, transform 0.5s cubic-bezier(.22,.68,0,1.2) ${index*40}ms`,
+    }}>
+      <div className="skill-icon-box"><SkillIcon name={name}/></div>
+      <div className="skill-name">{name}</div>
+    </div>
+  );
+}
 
-  useEffect(()=>{
-    const t = setTimeout(()=>setShow(true), idx*120);
-    return ()=>clearTimeout(t);
-  },[idx]);
+function SkillsSection() {
+  return (
+    <section id="skills">
+      <div className="wrap">
+        <FadeUp delay={0}>
+          <div className="sec-head"><span className="sec-bg-title">TECH STACK</span><h2>Tools & Technologies</h2></div>
+          <p style={{textAlign:'center',color:'var(--text2)',fontSize:'.88rem',marginBottom:'2.5rem'}}>Technologies I use as a DevOps & IoT Engineer</p>
+        </FadeUp>
+        <div className="skills-grid" style={{gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))'}}>
+          {ALL_SKILLS.map((name,i) => <SkillItem key={name} name={name} index={i}/>)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── PROJECT MODAL ── */
+function ProjectModal({ project, onClose }) {
+  if (!project) return null;
+  useEffect(() => {
+    const h = e => { if (e.key==='Escape') onClose(); };
+    window.addEventListener('keydown', h);
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', h); document.body.style.overflow = ''; };
+  }, [onClose]);
+  return (
+    <div className="pdf-overlay" onClick={onClose}>
+      <div className="proj-modal" onClick={e=>e.stopPropagation()}>
+        <div className="proj-modal-header">
+          <div>
+            <div style={{fontFamily:'JetBrains Mono,monospace',fontSize:'.7rem',color:'var(--accent)',letterSpacing:'.1em',marginBottom:4}}>PROJECT {project.num}</div>
+            <div style={{fontSize:'1.2rem',fontWeight:800,color:'var(--text)'}}>{project.title}</div>
+          </div>
+          <button className="pdf-modal-close" onClick={onClose}>✕</button>
+        </div>
+        <div style={{width:'100%',height:220,overflow:'hidden',position:'relative',background:'var(--bg3)',flexShrink:0}}>
+          <img src={project.img} alt={project.title} style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center center',display:'block'}} onError={e=>{e.target.style.display='none';}}/>
+          <div style={{position:'absolute',bottom:0,left:0,right:0,height:80,background:'linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 100%)'}}/>
+        </div>
+        <div style={{padding:'1.75rem',overflowY:'auto',flex:1}}>
+          <div style={{display:'flex',flexWrap:'wrap',gap:'.4rem',marginBottom:'1.25rem'}}>
+            {project.tags.map((t,j)=><span key={t} className={`tag ${project.cls[j]||'tag-blue'}`}>{t}</span>)}
+          </div>
+          <p style={{fontSize:'.9rem',color:'var(--text2)',lineHeight:1.9,marginBottom:'1.5rem'}}>{project.detail}</p>
+          <div style={{display:'flex',gap:'.75rem',flexWrap:'wrap'}}>
+            <a href={project.gh} target="_blank" rel="noopener noreferrer" className="btn btn-accent">View Repository →</a>
+            <button className="btn btn-ghost" onClick={onClose}>✕ Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   PROJECTS — setiap card naik dari bawah
+   ═══════════════════════════════════════════ */
+function ProjectsSection() {
+  const [showAll, setShowAll] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const sectionRef = useRef(null);
+  const visible = showAll ? PROJECTS : PROJECTS.slice(0,4);
+
+  const handleShowLess = () => {
+    setShowAll(false);
+    setTimeout(() => { sectionRef.current?.scrollIntoView({behavior:'smooth',block:'start'}); }, 50);
+  };
 
   return (
-    <div
-      className="cert-card card"
-      style={{
-        opacity:show?1:0,
-        transform:show?'translateY(0)':'translateY(24px)',
-        transition:'opacity .45s ease, transform .45s ease',
-        cursor:'pointer',
-        overflow:'hidden',
-        borderRadius:16,
-        padding:0,
-      }}
-      onClick={()=>onOpen(cert)}
-      onMouseEnter={()=>setHovered(true)}
-      onMouseLeave={()=>setHovered(false)}
-    >
-      {/* PDF thumbnail — iframe preview, zoom on hover */}
-      <div style={{
-        width:'100%', height:190,
-        overflow:'hidden', position:'relative',
-        background:'var(--bg3)',
-        borderBottom:'1px solid var(--border)',
-      }}>
-        <iframe
-          src={cert.pdf + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH'}
-          title={cert.title}
-          style={{
-            width:'100%', height:'100%',
-            border:'none', pointerEvents:'none',
-            transform: hovered ? 'scale(1.08)' : 'scale(1)',
-            transition:'transform .45s cubic-bezier(.25,.46,.45,.94)',
-            transformOrigin:'center top',
-          }}
-        />
-        {/* hover overlay */}
-        <div style={{
-          position:'absolute', inset:0,
-          background: hovered ? 'rgba(108,99,255,0.12)' : 'transparent',
-          transition:'background .3s',
-          display:'flex', alignItems:'center', justifyContent:'center',
-        }}>
-          {hovered && (
-            <div style={{
-              background:'var(--accent)', color:'#fff',
-              borderRadius:10, padding:'8px 18px',
-              fontFamily:'JetBrains Mono,monospace', fontSize:'.75rem',
-              fontWeight:700, display:'flex', alignItems:'center', gap:6,
-              boxShadow:'0 4px 16px rgba(108,99,255,0.4)',
-            }}>
-              📄 Buka PDF
+    <>
+      <section id="projects" ref={sectionRef}>
+        <div className="wrap">
+          <FadeUp delay={0}>
+            <div className="sec-head"><span className="sec-bg-title">PORTFOLIO</span><h2>Projects I've Built 🗂️</h2></div>
+            <p style={{textAlign:'center',color:'var(--text2)',fontSize:'.88rem',marginBottom:'2.5rem'}}>Projects created while learning DevOps and IoT engineering.</p>
+          </FadeUp>
+          <div className="projects-grid">
+            {visible.map((p,i) => (
+              <FadeUp key={p.num} delay={i * 110}>
+                <div className="card proj-card" style={{height:'100%'}}>
+                  <div className="proj-img">
+                    <img src={p.img} alt={p.title} onError={e=>{e.target.style.display='none';}}/>
+                    <div className="proj-img-ph">
+                      <svg viewBox="0 0 80 60" width="80" height="60">
+                        <path d="M10 50L10 10L70 10L70 50z" fill="none" stroke="rgba(108,99,255,0.2)" strokeWidth="2"/>
+                        <circle cx="25" cy="25" r="8" fill="rgba(108,99,255,0.1)"/>
+                        <path d="M10 40L28 24L45 38L58 28L70 40" fill="none" stroke="rgba(108,99,255,0.25)" strokeWidth="2"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="proj-body">
+                    <div className="proj-num">{p.num}</div>
+                    <div className="proj-title">{p.title}</div>
+                    <div className="proj-desc">{p.desc}</div>
+                    <div className="proj-tags">{p.tags.slice(0,4).map((t,j)=><span key={t} className={`tag ${p.cls[j]||'tag-blue'}`}>{t}</span>)}</div>
+                    <div className="proj-links">
+                      <button className="btn btn-accent" style={{padding:'8px 18px',fontSize:'.78rem'}} onClick={()=>setSelected(p)}>Details ↗</button>
+                      <a href={p.gh} target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{padding:'8px 18px',fontSize:'.78rem'}}>Preview</a>
+                    </div>
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+          {!showAll && PROJECTS.length > 4 && (
+            <FadeUp delay={200}><div style={{textAlign:'center',marginTop:'2.5rem'}}>
+              <button className="btn btn-outline" style={{padding:'12px 32px',fontSize:'.82rem'}} onClick={()=>setShowAll(true)}>View All Projects ↓</button>
+            </div></FadeUp>
+          )}
+          {showAll && (
+            <div style={{textAlign:'center',marginTop:'2.5rem'}}>
+              <button className="btn btn-ghost" style={{padding:'12px 32px',fontSize:'.82rem'}} onClick={handleShowLess}>↑ Show Less</button>
             </div>
           )}
         </div>
+      </section>
+
+      {/* CTA — hanya tampil saat tidak showAll */}
+      {!showAll && (
+        <section style={{padding:'5rem 0',background:'var(--bg2)',position:'relative',zIndex:1}}>
+          <div className="wrap" style={{textAlign:'center'}}>
+            <ZoomIn delay={0}>
+              <div style={{maxWidth:650,margin:'0 auto',padding:'3.5rem 2.5rem',background:'var(--card)',border:'1px solid var(--border)',borderRadius:24,position:'relative',overflow:'hidden'}}>
+                <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center,rgba(108,99,255,0.07) 0%,transparent 70%)',pointerEvents:'none'}}/>
+                <div style={{fontFamily:'JetBrains Mono,monospace',fontSize:'.72rem',color:'var(--accent)',letterSpacing:'.18em',textTransform:'uppercase',marginBottom:'1.25rem',position:'relative'}}>Let's Work Together</div>
+                <h2 style={{fontSize:'clamp(1.6rem,3.5vw,2.4rem)',fontWeight:900,color:'var(--text)',letterSpacing:'-0.04em',marginBottom:'1rem',lineHeight:1.15,position:'relative'}}>Have a project in mind?</h2>
+                <p style={{fontSize:'clamp(1rem,2vw,1.3rem)',fontWeight:600,position:'relative',background:'linear-gradient(135deg,var(--accent),var(--accent3))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',marginBottom:'2rem'}}>Let's build it together.</p>
+                <div style={{position:'relative'}}>
+                  <a className="btn btn-accent" href="#contact" style={{padding:'12px 32px',fontSize:'.88rem'}}
+                    onClick={e=>{e.preventDefault();document.getElementById('contact')?.scrollIntoView({behavior:'smooth'});}}>Get In Touch 📩</a>
+                </div>
+              </div>
+            </ZoomIn>
+          </div>
+        </section>
+      )}
+      {selected && <ProjectModal project={selected} onClose={()=>setSelected(null)}/>}
+    </>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   EXPERIENCE — cards bergantian kiri & kanan
+   ═══════════════════════════════════════════ */
+function ExperienceSection() {
+  return (
+    <section id="experience">
+      <div className="wrap">
+        <FadeUp delay={0}>
+          <div className="sec-head"><span className="sec-bg-title">EXPERIENCE</span><h2>Experiences ⏳</h2></div>
+          <p className="exp-intro">Here are the experiences I have had and am currently involved in.</p>
+        </FadeUp>
+        <div className="exp-grid">
+          {EXPERIENCES.map((e,i) => (
+            <SlideIn key={e.title} from={i % 2 === 0 ? 'left' : 'right'} delay={i * 80}>
+              <div className="card exp-card">
+                <div className="exp-title">{e.title}</div>
+                <div className="exp-org">{e.org}</div>
+                <div className="exp-type">| {e.type}</div>
+                <div className="exp-date">📅 {e.date}</div>
+                <div className="exp-desc">{e.desc}</div>
+              </div>
+            </SlideIn>
+          ))}
+        </div>
       </div>
-      {/* Card body */}
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   CERTIFICATES — zoom in per card
+   ═══════════════════════════════════════════ */
+function CertCard({ cert, idx, onOpen }) {
+  const [ref, v] = useInView(0.08);
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div ref={ref} className="cert-card card"
+      style={{
+        opacity: v ? 1 : 0,
+        transform: v ? 'translateY(0) scale(1)' : 'translateY(36px) scale(0.92)',
+        transition: `opacity .55s cubic-bezier(.22,.68,0,1.2) ${idx*100}ms, transform .55s cubic-bezier(.22,.68,0,1.2) ${idx*100}ms`,
+        cursor:'pointer', overflow:'hidden', borderRadius:16, padding:0,
+      }}
+      onClick={() => onOpen(cert)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div style={{width:'100%',height:190,overflow:'hidden',position:'relative',background:'var(--bg3)',borderBottom:'1px solid var(--border)'}}>
+        <iframe src={cert.pdf+'#toolbar=0&navpanes=0&scrollbar=0&view=FitH'} title={cert.title}
+          style={{width:'100%',height:'100%',border:'none',pointerEvents:'none',transform:hovered?'scale(1.08)':'scale(1)',transition:'transform .45s cubic-bezier(.25,.46,.45,.94)',transformOrigin:'center top'}}/>
+        <div style={{position:'absolute',inset:0,background:hovered?'rgba(108,99,255,0.12)':'transparent',transition:'background .3s',display:'flex',alignItems:'center',justifyContent:'center'}}>
+          {hovered && <div style={{background:'var(--accent)',color:'#fff',borderRadius:10,padding:'8px 18px',fontFamily:'JetBrains Mono,monospace',fontSize:'.75rem',fontWeight:700,display:'flex',alignItems:'center',gap:6,boxShadow:'0 4px 16px rgba(108,99,255,0.4)'}}>📄 Buka PDF</div>}
+        </div>
+      </div>
       <div className="cert-body">
         <div className="cert-title">{cert.title}</div>
         <div className="cert-issuer">{cert.issuer}</div>
@@ -794,18 +697,17 @@ function CertCard({cert, idx, onOpen}) {
   );
 }
 
-/* ── CERTIFICATES SECTION ── */
 function CertificatesSection() {
   const [selected, setSelected] = useState(null);
   return (
     <section id="certificates">
       <div className="wrap">
-        <div className="sec-head"><span className="sec-bg-title">CERTIFICATES</span><h2>Certificates 🎓</h2></div>
-       <p className="certs-intro">Certificates earned through unive rsity, workshops, and self-paced learning.</p>
+        <FadeUp delay={0}>
+          <div className="sec-head"><span className="sec-bg-title">CERTIFICATES</span><h2>Certificates 🎓</h2></div>
+          <p className="certs-intro">Certificates earned through university, workshops, and self-paced learning.</p>
+        </FadeUp>
         <div className="certs-grid">
-          {CERTS.map((c,i)=>(
-            <CertCard key={c.title} cert={c} idx={i} onOpen={setSelected}/>
-          ))}
+          {CERTS.map((c,i) => <CertCard key={c.title} cert={c} idx={i} onOpen={setSelected}/>)}
         </div>
       </div>
       {selected && <PdfModal cert={selected} onClose={()=>setSelected(null)}/>}
@@ -813,22 +715,25 @@ function CertificatesSection() {
   );
 }
 
-/* ── CONTACT ── */
+/* ═══════════════════════════════════════════
+   CONTACT — info dari kiri, form dari kanan
+   ═══════════════════════════════════════════ */
 function ContactSection() {
-  useReveal();
-  const [form,setForm]=useState({name:'',email:'',msg:''});
-  const [sent,setSent]=useState(false);
-  const go=e=>{
+  const [form, setForm] = useState({name:'',email:'',msg:''});
+  const [sent, setSent] = useState(false);
+  const go = e => {
     e.preventDefault();
     window.open(`mailto:handikanainggolan24@gmail.com?subject=Portfolio Contact from ${form.name}&body=${encodeURIComponent(form.msg+'\n\nFrom: '+form.name+'\nEmail: '+form.email)}`);
-    setSent(true);setTimeout(()=>setSent(false),4000);
+    setSent(true); setTimeout(()=>setSent(false),4000);
   };
   return (
     <section id="contact">
       <div className="wrap">
-        <div className="sec-head"><span className="sec-bg-title">CONTACT</span><h2>Let's Connect 🤝</h2></div>
+        <FadeUp delay={0}>
+          <div className="sec-head"><span className="sec-bg-title">CONTACT</span><h2>Let's Connect 🤝</h2></div>
+        </FadeUp>
         <div className="contact-grid">
-          <div className="reveal">
+          <SlideIn from="left" delay={100}>
             <div className="contact-info">
               <h3>Get In Touch</h3>
               <p>Open to internships, collaborations, and DevOps & IoT projects. Let's build something great together.</p>
@@ -843,22 +748,25 @@ function ContactSection() {
                 </a>
               ))}
             </div>
-          </div>
-          <div className="card reveal d2" style={{padding:'2rem'}}>
-            {sent&&<div style={{background:'rgba(52,211,153,0.1)',border:'1px solid rgba(52,211,153,0.3)',borderRadius:10,padding:'10px 14px',marginBottom:'1rem',color:'var(--green)',fontFamily:'JetBrains Mono,monospace',fontSize:'.78rem'}}>✓ Opening email client...</div>}
-            <form onSubmit={go}>
-              <div className="form-field"><label>Name</label><input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} placeholder="Your name" required/></div>
-              <div className="form-field"><label>Email</label><input type="email" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} placeholder="your@email.com" required/></div>
-              <div className="form-field"><label>Message</label><textarea value={form.msg} onChange={e=>setForm(f=>({...f,msg:e.target.value}))} placeholder="Tell me about your project..." required/></div>
-              <button type="submit" className="btn btn-accent" style={{width:'100%',justifyContent:'center'}}>Send Message →</button>
-            </form>
-          </div>
+          </SlideIn>
+          <SlideIn from="right" delay={200}>
+            <div className="card" style={{padding:'2rem'}}>
+              {sent && <div style={{background:'rgba(52,211,153,0.1)',border:'1px solid rgba(52,211,153,0.3)',borderRadius:10,padding:'10px 14px',marginBottom:'1rem',color:'var(--green)',fontFamily:'JetBrains Mono,monospace',fontSize:'.78rem'}}>✓ Opening email client...</div>}
+              <form onSubmit={go}>
+                <div className="form-field"><label>Name</label><input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} placeholder="Your name" required/></div>
+                <div className="form-field"><label>Email</label><input type="email" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} placeholder="your@email.com" required/></div>
+                <div className="form-field"><label>Message</label><textarea value={form.msg} onChange={e=>setForm(f=>({...f,msg:e.target.value}))} placeholder="Tell me about your project..." required/></div>
+                <button type="submit" className="btn btn-accent" style={{width:'100%',justifyContent:'center'}}>Send Message →</button>
+              </form>
+            </div>
+          </SlideIn>
         </div>
       </div>
     </section>
   );
 }
 
+/* ── FOOTER ── */
 function Footer() {
   return (
     <footer>
@@ -872,19 +780,20 @@ function Footer() {
   );
 }
 
+/* ── BACK TO TOP ── */
 function BackToTop() {
-  const [show,setShow]=useState(false);
-  useEffect(()=>{const h=()=>setShow(window.scrollY>300);window.addEventListener('scroll',h);return()=>window.removeEventListener('scroll',h);},[]);
-  return <button className={`btt${show?' show':''}`} onClick={()=>window.scrollTo({top:0,behavior:'smooth'})}>↑</button>;
+  const [show, setShow] = useState(false);
+  useEffect(() => { const h = () => setShow(window.scrollY > 300); window.addEventListener('scroll', h); return () => window.removeEventListener('scroll', h); }, []);
+  return <button className={`btt${show ? ' show' : ''}`} onClick={() => window.scrollTo({top:0,behavior:'smooth'})}>↑</button>;
 }
 
 /* ── APP ── */
 export default function App() {
-  const [theme,setTheme]=useState('dark');
-  const [loaded,setLoaded]=useState(false);
-  const active=useActiveSection();
-  useEffect(()=>{document.body.className=theme;},[theme]);
-  useEffect(()=>{const t=setTimeout(()=>setLoaded(true),2200);return()=>clearTimeout(t);},[]);
+  const [theme, setTheme] = useState('dark');
+  const [loaded, setLoaded] = useState(false);
+  const active = useActiveSection();
+  useEffect(() => { document.body.className = theme; }, [theme]);
+  useEffect(() => { const t = setTimeout(() => setLoaded(true), 2200); return () => clearTimeout(t); }, []);
   return (
     <>
       <Loader done={loaded}/>
