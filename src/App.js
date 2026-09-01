@@ -357,7 +357,7 @@ function HeroSection() {
         }}>
           <div className="avatar-ring"/>
           <div className="avatar-wrap">
-            <img src={foto1} alt="Handika Pratama" onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>
+            <img src={foto1} alt="Handika Pratama Nainggolan" onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>
             <div className="avatar-ph" style={{display:'none'}}>HP</div>
           </div>
         </div>
