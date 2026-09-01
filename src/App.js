@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './index.css';
 
-import foto1 from './image/1.jpeg';
+import foto1 from './image/frofile.jpeg';
 import foto7 from './image/pa.png';
 import foto2 from './image/sister.png';
 import foto4 from './image/monitoring.png';
