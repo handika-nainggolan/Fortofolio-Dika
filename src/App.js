@@ -396,14 +396,14 @@ function AboutSection() {
           <div className="photo-accent-bg"/>
           <div className="photo-dots">{Array.from({length:25}).map((_,i)=><span key={i}/>)}</div>
           <div className="photo-frame">
-            <img src={foto1} alt="Handika Pratama" onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>
+            <img src={foto1} alt="Handika Pratama Nainggolan" onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>
             <div className="photo-ph" style={{display:'none'}}>HP</div>
           </div>
         </SlideIn>
 
         <SlideIn from="right" delay={230} className="about-content">
           <div className="hero-badge" style={{marginBottom:'1rem'}}><span className="dot"/>Open to Work</div>
-          <h2>Hi 👋 i'm <span className="grad">Handika Pratama</span></h2>
+          <h2>Hi 👋 i'm <span className="grad">Handika Pratama Nainggolan</span></h2>
           <div className="about-role">Aspiring DevOps & IoT Engineer 🌐 — Institut Teknologi Del</div>
           <p>Passionate technology student focused on <strong>DevOps, Cloud Computing, and IoT systems</strong>. During my studies, I actively explored CI/CD pipelines, Docker, and Kubernetes — building a solid foundation that I'm continuing to grow.</p>
           <p>On the IoT side, I design <strong>embedded systems</strong> using Arduino, sensors, and MQTT protocols — bridging the physical and digital worlds.</p>
